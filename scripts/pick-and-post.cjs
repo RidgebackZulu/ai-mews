@@ -118,13 +118,18 @@ async function main() {
     const prompt = `You are writing one of five daily picks for a site called “AI Mews”.\n\nReturn STRICT JSON with keys: title, dek, bullets (array of 3-5 short bullets), take (2-3 sentences).\n\nSelection vibe: vibe coding, new businesses/ventures, big AI company moves, major acquisitions, new popular tools/agents/bots. Allow a little spicy drama/politics sometimes.\n\nTone for take: realistic/pragmatic, humorous, sometimes snarky/salty, ALWAYS truthful. No fabrication. No emojis.\n\nSOURCE URL: ${sourceUrl}\n\nARTICLE TITLE: ${title}\n\nARTICLE TEXT:\n${text}`;
 
     const model = process.env.OPENAI_MODEL || 'gpt-4o-mini';
-    const resp = await openai.responses.create({
+
+    // Use Chat Completions JSON mode for compatibility (Responses API changed params).
+    const resp = await openai.chat.completions.create({
       model,
-      input: prompt,
+      messages: [
+        { role: 'system', content: 'You output only valid JSON.' },
+        { role: 'user', content: prompt }
+      ],
       response_format: { type: 'json_object' }
     });
 
-    const jsonText = resp.output_text;
+    const jsonText = resp.choices?.[0]?.message?.content || '';
     let obj;
     try { obj = JSON.parse(jsonText); } catch {
       throw new Error(`OpenAI returned non-JSON: ${String(jsonText).slice(0, 400)}`);
