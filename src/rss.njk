@@ -1,0 +1,28 @@
+---
+permalink: /rss.xml
+---
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0">
+  <channel>
+    <title>{{ site.title }}</title>
+    <link>{{ site.baseUrl }}/</link>
+    <description>{{ site.description }}</description>
+    <language>en</language>
+    {% for post in collections.posts.slice(0, 30) %}
+      <item>
+        <title>{{ post.data.title }}</title>
+        <link>{{ site.baseUrl + post.url }}</link>
+        <guid>{{ site.baseUrl + post.url }}</guid>
+        <pubDate>{{ post.date.toUTCString() }}</pubDate>
+        <description><![CDATA[
+          <p>{{ post.data.dek }}</p>
+          <ul>
+            {% for b in post.data.bullets %}<li>{{ b }}</li>{% endfor %}
+          </ul>
+          <p><b>My take:</b> {{ post.data.take }}</p>
+          <p><a href="{{ post.data.sourceUrl }}">Source</a></p>
+        ]]></description>
+      </item>
+    {% endfor %}
+  </channel>
+</rss>

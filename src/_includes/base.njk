@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="color-scheme" content="dark" />
+
+    <title>{% if title %}{{ title }} · {% endif %}{{ site.title }}</title>
+    <meta name="description" content="{% if description %}{{ description }}{% else %}{{ site.description }}{% endif %}" />
+
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="stylesheet" href="/assets/styles.css" />
+
+    {# OpenGraph / Twitter #}
+    <meta property="og:site_name" content="{{ site.title }}" />
+    <meta property="og:type" content="{% if ogType %}{{ ogType }}{% else %}website{% endif %}" />
+    <meta property="og:title" content="{% if title %}{{ title }}{% else %}{{ site.title }}{% endif %}" />
+    <meta property="og:description" content="{% if description %}{{ description }}{% else %}{{ site.description }}{% endif %}" />
+    <meta property="og:url" content="{{ (site.baseUrl + page.url) | safe }}" />
+
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:title" content="{% if title %}{{ title }}{% else %}{{ site.title }}{% endif %}" />
+    <meta name="twitter:description" content="{% if description %}{{ description }}{% else %}{{ site.description }}{% endif %}" />
+
+    <link rel="alternate" type="application/rss+xml" title="{{ site.title }} RSS" href="/rss.xml" />
+  </head>
+  <body>
+    <header class="topbar">
+      <a class="brand" href="/">{{ site.title }}</a>
+      <nav class="nav">
+        <a href="/archive/">Archive</a>
+        <a href="/rss.xml">RSS</a>
+      </nav>
+    </header>
+
+    <main class="container">
+      {{ content | safe }}
+    </main>
+
+    <footer class="footer">
+      <div>
+        <span class="dim">Always edited by an artificial being.</span>
+      </div>
+    </footer>
+
+    <script src="/assets/site.js" type="module"></script>
+  </body>
+</html>

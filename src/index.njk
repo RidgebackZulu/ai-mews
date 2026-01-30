@@ -1,0 +1,24 @@
+---
+layout: base.njk
+title: Daily picks
+---
+
+<section class="hero">
+  <h1 class="heroTitle">AI Mews</h1>
+  <p class="heroTagline">{{ site.tagline }}</p>
+</section>
+
+<section class="list">
+  {% for post in collections.posts %}
+    <article class="listItem">
+      <a class="listTitle" href="{{ post.url }}">{{ post.data.title }}</a>
+      <div class="listMeta">
+        <time datetime="{{ post.date | isoDate }}">{{ post.date.toDateString() }}</time>
+        <span class="sep">·</span>
+        <a class="dim" href="{{ post.data.sourceUrl }}" target="_blank" rel="nofollow noopener">source</a>
+      </div>
+      <p class="listDek">{{ post.data.dek }}</p>
+      <p class="listTake"><span class="dim">Take:</span> {{ post.data.take }}</p>
+    </article>
+  {% endfor %}
+</section>

@@ -1,0 +1,72 @@
+---
+layout: base.njk
+ogType: article
+---
+
+<article class="post">
+  <div class="postMeta">
+    <time datetime="{{ page.date | isoDate }}">{{ page.date.toDateString() }}</time>
+    <span class="sep">·</span>
+    <a class="source" href="{{ sourceUrl }}" rel="nofollow noopener" target="_blank">Source ↗</a>
+  </div>
+
+  <h1 class="postTitle">{{ title }}</h1>
+
+  {% if dek %}
+    <p class="dek">{{ dek }}</p>
+  {% endif %}
+
+  <section class="shareBox">
+    <div class="shareRow">
+      <button class="btn" data-copy-summary>Copy link + summary</button>
+      <a class="btn ghost" href="https://twitter.com/intent/tweet?text={{ (title + ' — ' + (site.baseUrl + page.url)) | urlencode }}" target="_blank" rel="noopener">Share</a>
+    </div>
+    <textarea class="copyArea" readonly data-copy-area>
+{{ title }}
+{{ site.baseUrl + page.url }}
+
+Summary:
+{% for b in bullets %}- {{ b }}
+{% endfor %}
+
+My take:
+{{ take }}
+
+Source:
+{{ sourceUrl }}
+    </textarea>
+    <p class="dim small">Tip: the shareable link is this site (for traffic). The original is credited under “Source”.</p>
+  </section>
+
+  <section class="card">
+    <h2>Summary</h2>
+    <ul>
+      {% for b in bullets %}
+        <li>{{ b }}</li>
+      {% endfor %}
+    </ul>
+  </section>
+
+  <section class="card">
+    <h2>My take</h2>
+    <p class="take">{{ take }}</p>
+  </section>
+
+  <section class="card">
+    <h2>Why this is here</h2>
+    <p class="dim">One pick per day. If it’s not interesting, it doesn’t make the cut.</p>
+  </section>
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BlogPosting",
+    "headline": {{ title | dump }},
+    "datePublished": "{{ page.date | isoDate }}",
+    "author": { "@type": "Person", "name": {{ site.author | dump }} },
+    "url": "{{ site.baseUrl + page.url }}",
+    "mainEntityOfPage": "{{ site.baseUrl + page.url }}",
+    "isBasedOn": "{{ sourceUrl }}"
+  }
+  </script>
+</article>

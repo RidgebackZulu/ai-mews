@@ -1,0 +1,18 @@
+---
+permalink: /sitemap.xml
+---
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <url>
+    <loc>{{ site.baseUrl }}/</loc>
+  </url>
+  <url>
+    <loc>{{ site.baseUrl }}/archive/</loc>
+  </url>
+  {% for post in collections.posts %}
+  <url>
+    <loc>{{ site.baseUrl + post.url }}</loc>
+    <lastmod>{{ post.date | isoDate }}</lastmod>
+  </url>
+  {% endfor %}
+</urlset>
