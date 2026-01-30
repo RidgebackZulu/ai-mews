@@ -3,7 +3,7 @@
   "tagline": "One daily AI link. Neon-lit. Mobile-first.",
   "description": "Daily AI news picks with a short summary and a pragmatic, occasionally salty take.",
   "author": "Maximilian",
-  "baseUrl": "",
+  "baseUrl": "https://ridgebackzulu.github.io/ai-mews",
   "locale": "en_US",
   "timezone": "America/Chicago"
 }
