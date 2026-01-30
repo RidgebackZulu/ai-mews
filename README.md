@@ -29,6 +29,7 @@ npm run dev
 
 ## Notes
 
-- The scheduled workflow is set to 14:00 UTC (08:00 CST). If you’re on CDT, change the cron.
+- The scheduled workflow runs at both 13:00 and 14:00 UTC (covers 08:00 CDT/CST). The script only posts at 08:00 America/Chicago.
+- For manual testing, you can set repo secrets `FORCE_RUN=1` and (if you need to regenerate today's post) `FORCE_OVERWRITE=1`.
 - Posts are stored as `src/posts/YYYY-MM-DD.md`.
 - The share link is always the post permalink on this site; the original article is credited as Source.

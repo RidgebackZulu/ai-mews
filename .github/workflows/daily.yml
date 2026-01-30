@@ -37,8 +37,9 @@ jobs:
           SITE_TZ: America/Chicago
           TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
           TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
-          # For manual testing (Run workflow), set this secret to "1" temporarily if you want.
+          # For manual testing (Run workflow), set these secrets to "1" temporarily if you want.
           FORCE_RUN: ${{ secrets.FORCE_RUN }}
+          FORCE_OVERWRITE: ${{ secrets.FORCE_OVERWRITE }}
         run: node scripts/pick-and-post.cjs
 
       - name: Build site

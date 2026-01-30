@@ -40,8 +40,9 @@ async function main() {
     try { await fs.access(p); return true; } catch { return false; }
   }
 
-  if (await exists(outPath)) {
-    console.log(`Post for ${today} already exists: ${outPath}`);
+  const overwrite = process.env.FORCE_OVERWRITE === '1';
+  if (await exists(outPath) && !overwrite) {
+    console.log(`Post for ${today} already exists: ${outPath} (set FORCE_OVERWRITE=1 to regenerate)`);
     return;
   }
 
