@@ -2,7 +2,11 @@ name: Daily AI Mews
 
 on:
   schedule:
-    # 08:00 America/Chicago ~= 14:00 UTC during CST (adjust if you switch to CDT)
+    # GitHub cron is UTC only. We run at both possible UTC offsets for 08:00 America/Chicago.
+    # - CST  (UTC-6): 08:00 -> 14:00 UTC
+    # - CDT  (UTC-5): 08:00 -> 13:00 UTC
+    # The script is idempotent and will only post once per day.
+    - cron: '0 13 * * *'
     - cron: '0 14 * * *'
   workflow_dispatch: {}
 
@@ -31,6 +35,8 @@ jobs:
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
           OPENAI_MODEL: ${{ secrets.OPENAI_MODEL }}
           SITE_TZ: America/Chicago
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
         run: node scripts/pick-and-post.cjs
 
       - name: Build site

@@ -12,8 +12,10 @@ A tiny, mobile-first cyberpunk daily AI link with a summary + a pragmatic/salty 
 
 4. Add repo secrets (**Settings → Secrets and variables → Actions → New repository secret**):
    - `BRAVE_API_KEY` (Brave Search API key)
-   - `OPENAI_API_KEY` (used to write the summary + “take”)
+   - `OPENAI_API_KEY` (used to write the summaries + “take”)
    - Optional: `OPENAI_MODEL` (e.g. `gpt-4o-mini`)
+   - `TELEGRAM_BOT_TOKEN` (Telegram bot token)
+   - `TELEGRAM_CHAT_ID` (channel/group id, e.g. `-1001234567890`)
 
 5. Run once:
    - **Actions → Daily AI Mews → Run workflow**

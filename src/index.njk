@@ -15,10 +15,9 @@ title: Daily picks
       <div class="listMeta">
         <time datetime="{{ post.date | isoDate }}">{{ post.date.toDateString() }}</time>
         <span class="sep">·</span>
-        <a class="dim" href="{{ post.data.sourceUrl }}" target="_blank" rel="nofollow noopener">source</a>
+        <span class="dim">{{ (post.data.items or []) | length }} picks</span>
       </div>
       <p class="listDek">{{ post.data.dek }}</p>
-      <p class="listTake"><span class="dim">Take:</span> {{ post.data.take }}</p>
     </article>
   {% endfor %}
 </section>

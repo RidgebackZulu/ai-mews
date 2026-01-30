@@ -7,7 +7,7 @@ ogType: article
   <div class="postMeta">
     <time datetime="{{ page.date | isoDate }}">{{ page.date.toDateString() }}</time>
     <span class="sep">·</span>
-    <a class="source" href="{{ sourceUrl }}" rel="nofollow noopener" target="_blank">Source ↗</a>
+    <span class="dim">5 picks</span>
   </div>
 
   <h1 class="postTitle">{{ title }}</h1>
@@ -18,43 +18,47 @@ ogType: article
 
   <section class="shareBox">
     <div class="shareRow">
-      <button class="btn" data-copy-summary>Copy link + summary</button>
+      <button class="btn" data-copy-summary>Copy page link + all summaries</button>
       <a class="btn ghost" href="https://twitter.com/intent/tweet?text={{ (title + ' — ' + (site.baseUrl + page.url)) | urlencode }}" target="_blank" rel="noopener">Share</a>
     </div>
     <textarea class="copyArea" readonly data-copy-area>
 {{ title }}
 {{ site.baseUrl + page.url }}
 
-Summary:
-{% for b in bullets %}- {{ b }}
+{% for item in items %}
+{{ loop.index }}. {{ item.title }}
+- {{ item.dek }}
+{% for b in item.bullets %}- {{ b }}
 {% endfor %}
+Take: {{ item.take }}
+Source: {{ item.sourceUrl }}
 
-My take:
-{{ take }}
-
-Source:
-{{ sourceUrl }}
+{% endfor %}
     </textarea>
-    <p class="dim small">Tip: the shareable link is this site (for traffic). The original is credited under “Source”.</p>
+    <p class="dim small">Tip: the shareable link is this site (for traffic). Each item credits the original source.</p>
   </section>
 
-  <section class="card">
-    <h2>Summary</h2>
-    <ul>
-      {% for b in bullets %}
-        <li>{{ b }}</li>
-      {% endfor %}
-    </ul>
-  </section>
-
-  <section class="card">
-    <h2>My take</h2>
-    <p class="take">{{ take }}</p>
-  </section>
+  {% for item in items %}
+    <section class="card">
+      <div class="postMeta">
+        <span class="dim">{{ loop.index }}.</span>
+        <a class="listTitle" href="{{ item.sourceUrl }}" target="_blank" rel="nofollow noopener">{{ item.title }} ↗</a>
+      </div>
+      <p class="dek">{{ item.dek }}</p>
+      <h2>Summary</h2>
+      <ul>
+        {% for b in item.bullets %}
+          <li>{{ b }}</li>
+        {% endfor %}
+      </ul>
+      <h2>My take</h2>
+      <p class="take">{{ item.take }}</p>
+    </section>
+  {% endfor %}
 
   <section class="card">
     <h2>Why this is here</h2>
-    <p class="dim">One pick per day. If it’s not interesting, it doesn’t make the cut.</p>
+    <p class="dim">Five daily picks: vibe coding, ventures, big AI moves, hot new tools/agents, plus occasional spicy politics/drama.</p>
   </section>
 
   <script type="application/ld+json">
@@ -65,8 +69,7 @@ Source:
     "datePublished": "{{ page.date | isoDate }}",
     "author": { "@type": "Person", "name": {{ site.author | dump }} },
     "url": "{{ site.baseUrl + page.url }}",
-    "mainEntityOfPage": "{{ site.baseUrl + page.url }}",
-    "isBasedOn": "{{ sourceUrl }}"
+    "mainEntityOfPage": "{{ site.baseUrl + page.url }}"
   }
   </script>
 </article>
