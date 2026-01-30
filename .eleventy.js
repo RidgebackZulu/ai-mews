@@ -19,6 +19,9 @@ module.exports = function (eleventyConfig) {
       includes: "_includes",
       data: "_data"
     },
+    // GitHub Pages project sites live under /<repo>/
+    // Eleventy will apply this to the built-in `url` filter.
+    pathPrefix: process.env.ELEVENTY_PATH_PREFIX || "/ai-mews/",
     markdownTemplateEngine: "njk",
     htmlTemplateEngine: "njk",
     templateFormats: ["md", "njk", "html"]

@@ -11,7 +11,7 @@ title: Daily picks
 <section class="list">
   {% for post in collections.posts %}
     <article class="listItem">
-      <a class="listTitle" href="{{ post.url }}">{{ post.data.title }}</a>
+      <a class="listTitle" href="{{ post.url | url }}">{{ post.data.title }}</a>
       <div class="listMeta">
         <time datetime="{{ post.date | isoDate }}">{{ post.date.toDateString() }}</time>
         <span class="sep">·</span>

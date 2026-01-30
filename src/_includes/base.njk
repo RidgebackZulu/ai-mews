@@ -8,8 +8,8 @@
     <title>{% if title %}{{ title }} · {% endif %}{{ site.title }}</title>
     <meta name="description" content="{% if description %}{{ description }}{% else %}{{ site.description }}{% endif %}" />
 
-    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
-    <link rel="stylesheet" href="/assets/styles.css" />
+    <link rel="icon" href="{{ '/favicon.svg' | url }}" type="image/svg+xml" />
+    <link rel="stylesheet" href="{{ '/assets/styles.css' | url }}" />
 
     {# OpenGraph / Twitter #}
     <meta property="og:site_name" content="{{ site.title }}" />
@@ -22,14 +22,14 @@
     <meta name="twitter:title" content="{% if title %}{{ title }}{% else %}{{ site.title }}{% endif %}" />
     <meta name="twitter:description" content="{% if description %}{{ description }}{% else %}{{ site.description }}{% endif %}" />
 
-    <link rel="alternate" type="application/rss+xml" title="{{ site.title }} RSS" href="/rss.xml" />
+    <link rel="alternate" type="application/rss+xml" title="{{ site.title }} RSS" href="{{ '/rss.xml' | url }}" />
   </head>
   <body>
     <header class="topbar">
-      <a class="brand" href="/">{{ site.title }}</a>
+      <a class="brand" href="{{ '/' | url }}">{{ site.title }}</a>
       <nav class="nav">
-        <a href="/archive/">Archive</a>
-        <a href="/rss.xml">RSS</a>
+        <a href="{{ '/archive/' | url }}">Archive</a>
+        <a href="{{ '/rss.xml' | url }}">RSS</a>
       </nav>
     </header>
 
@@ -43,6 +43,6 @@
       </div>
     </footer>
 
-    <script src="/assets/site.js" type="module"></script>
+    <script src="{{ '/assets/site.js' | url }}" type="module"></script>
   </body>
 </html>

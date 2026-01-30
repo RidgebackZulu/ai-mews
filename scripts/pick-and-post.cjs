@@ -25,8 +25,9 @@ async function main() {
   // --- DST handling ---
   // GitHub Actions cron is UTC-only; the workflow runs at both 13:00 and 14:00 UTC.
   // We only proceed if local time is actually 08:00 in America/Chicago.
+  // Manual runs can bypass this by setting FORCE_RUN=1.
   const nowLocal = DateTime.now().setZone(TZ);
-  if (nowLocal.hour !== 8) {
+  if (nowLocal.hour !== 8 && process.env.FORCE_RUN !== '1') {
     console.log(`Not 08:00 ${TZ} (it is ${nowLocal.toFormat('HH:mm')}); exiting.`);
     return;
   }
@@ -142,8 +143,12 @@ async function main() {
   }
 
   async function sendTelegramDigest({ date, pageUrl, items }) {
-    if (!tgToken || !tgChatId) {
-      console.log('Telegram secrets not set; skipping Telegram send.');
+    const wantsTelegram = Boolean(tgToken || tgChatId);
+    if (wantsTelegram && (!tgToken || !tgChatId)) {
+      throw new Error('Telegram is partially configured. Set both TELEGRAM_BOT_TOKEN and TELEGRAM_CHAT_ID.');
+    }
+    if (!wantsTelegram) {
+      console.log('Telegram not configured; skipping Telegram send.');
       return;
     }
 
