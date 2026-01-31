@@ -61,33 +61,70 @@ async function main() {
     return res.json();
   }
 
+  // --- Source quality policy ---
+  // Batman request: avoid Wikipedia / wiki-like sources; prefer up-to-date breaking-news outlets
+  // and primary sources. We enforce via a denylist + allowlist.
+  const DENY_HOSTS = new Set([
+    'wikipedia.org', 'wikidata.org', 'wikia.com', 'fandom.com',
+    'medium.com', 'substack.com',
+    'reddit.com',
+  ]);
+
+  const ALLOW_HOSTS = new Set([
+    // Primary sources
+    'openai.com', 'anthropic.com', 'deepmind.google', 'ai.googleblog.com', 'blog.google',
+    'microsoft.com', 'meta.com', 'github.com',
+
+    // High-confidence breaking news / business press
+    'reuters.com', 'apnews.com', 'bloomberg.com', 'ft.com', 'wsj.com', 'nytimes.com',
+    'theverge.com', 'arstechnica.com', 'wired.com', 'techcrunch.com', 'axios.com',
+    'economist.com', 'politico.com',
+
+    // AI/tech press (generally credible, but still screened via recency)
+    'sifted.eu', 'theinformation.com'
+  ]);
+
+  function isDeniedHost(host) {
+    if (!host) return false;
+    if (DENY_HOSTS.has(host)) return true;
+    // Treat subdomains of denied hosts as denied.
+    for (const d of DENY_HOSTS) {
+      if (host === d || host.endsWith('.' + d)) return true;
+    }
+    return false;
+  }
+
+  function isAllowedHost(host) {
+    if (!host) return false;
+    if (ALLOW_HOSTS.has(host)) return true;
+    // Allow subdomains of allowlisted hosts.
+    for (const a of ALLOW_HOSTS) {
+      if (host === a || host.endsWith('.' + a)) return true;
+    }
+    return false;
+  }
+
   function scoreResult(r) {
     const u = (r.url || '').toLowerCase();
     let s = 0;
 
     const boosts = [
-      // big AI companies + primary sources
+      // primary sources
       'openai.com', 'anthropic.com', 'deepmind.google', 'ai.googleblog.com', 'blog.google',
       'microsoft.com', 'meta.com', 'github.com',
 
-      // popular outlets
-      'theverge.com', 'techcrunch.com', 'bloomberg.com', 'reuters.com', 'wsj.com',
-      'ft.com', 'arstechnica.com', 'wired.com',
-
-      // community highlights
-      'news.ycombinator.com', 'producthunt.com',
-
-      // occasional spice
-      'politico.com', 'theguardian.com', 'nytimes.com'
+      // high-confidence outlets
+      'reuters.com', 'apnews.com', 'bloomberg.com', 'wsj.com', 'ft.com', 'nytimes.com'
     ];
     if (boosts.some(b => u.includes(b))) s += 3;
 
     if (/(agent|agents|bot|tool|startup|funding|seed|series|acquir|merger|m&a|launch|release|copilot|vibe)/i.test(u)) s += 2;
 
-    if (u.includes('twitter.com') || u.includes('x.com')) s -= 2;
-    if (u.includes('youtube.com') || u.includes('tiktok.com')) s -= 1;
+    // Lower-quality / hard-to-parse sources
+    if (u.includes('twitter.com') || u.includes('x.com')) s -= 3;
+    if (u.includes('youtube.com') || u.includes('tiktok.com')) s -= 2;
 
-    if (r.age && /minute|hour/i.test(r.age)) s += 1;
+    if (r.age && /minute|hour/i.test(r.age)) s += 2;
 
     if (u.includes('utm_') || u.includes('amp')) s -= 0.5;
 
@@ -212,6 +249,7 @@ async function main() {
   raw.sort((a, b) => scoreResult(b) - scoreResult(a));
 
   // De-dupe by hostname (variety). Allow max 2 per host.
+  // Enforce allowlist/denylist to keep sources high-confidence and current.
   const hostCounts = new Map();
   const seenUrl = new Set();
   const candidates = [];
@@ -221,13 +259,23 @@ async function main() {
     if (!host) continue;
     if (seenUrl.has(r.url)) continue;
 
+    if (isDeniedHost(host)) {
+      // e.g. Wikipedia / Medium / Reddit
+      continue;
+    }
+
+    // Unless explicitly overridden, only accept allowlisted hosts.
+    if (process.env.ALLOW_ANY_HOST !== '1' && !isAllowedHost(host)) {
+      continue;
+    }
+
     const count = hostCounts.get(host) || 0;
     if (count >= 2) continue;
 
     hostCounts.set(host, count + 1);
     seenUrl.add(r.url);
     candidates.push(r);
-    if (candidates.length >= 10) break; // extras in case readability fails
+    if (candidates.length >= 12) break; // extras in case readability fails
   }
 
   const picked = [];
