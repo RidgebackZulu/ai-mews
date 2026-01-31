@@ -22,13 +22,16 @@ async function main() {
 
   const openai = new OpenAI({ apiKey: openaiKey });
 
-  // --- DST handling ---
-  // GitHub Actions cron is UTC-only; the workflow runs at both 13:00 and 14:00 UTC.
-  // We only proceed if local time is actually 08:00 in America/Chicago.
-  // Manual runs can bypass this by setting FORCE_RUN=1.
+  // --- Schedule handling ---
+  // We run this workflow on a fixed UTC cron schedule (see .github/workflows/daily.yml).
+  // Historically we gated on local 08:00 to handle DST, but timezone resolution can be flaky
+  // in some CI environments. Instead:
+  // - allow the workflow to run whenever triggered
+  // - rely on the "post already exists" guard to keep it idempotent
+  // Optionally, you can re-enable the local-hour gate by setting ENFORCE_LOCAL_8AM=1.
   const nowLocal = DateTime.now().setZone(TZ);
-  if (nowLocal.hour !== 8 && process.env.FORCE_RUN !== '1') {
-    console.log(`Not 08:00 ${TZ} (it is ${nowLocal.toFormat('HH:mm')}); exiting.`);
+  if (process.env.ENFORCE_LOCAL_8AM === '1' && nowLocal.hour !== 8 && process.env.FORCE_RUN !== '1') {
+    console.log(`ENFORCE_LOCAL_8AM=1 and it's not 08:00 ${TZ} (it is ${nowLocal.toFormat('HH:mm')}); exiting.`);
     return;
   }
 
