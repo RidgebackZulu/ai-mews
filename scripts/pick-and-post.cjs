@@ -73,15 +73,31 @@ async function main() {
   const ALLOW_HOSTS = new Set([
     // Primary sources
     'openai.com', 'anthropic.com', 'deepmind.google', 'ai.googleblog.com', 'blog.google',
-    'microsoft.com', 'meta.com', 'github.com',
+    'microsoft.com', 'meta.com', 'github.com', 'nvidia.com', 'stability.ai', 'midjourney.com',
+    'huggingface.co', 'cohere.com', 'mistral.ai', 'perplexity.ai', 'x.ai',
 
     // High-confidence breaking news / business press
     'reuters.com', 'apnews.com', 'bloomberg.com', 'ft.com', 'wsj.com', 'nytimes.com',
     'theverge.com', 'arstechnica.com', 'wired.com', 'techcrunch.com', 'axios.com',
-    'economist.com', 'politico.com',
+    'economist.com', 'politico.com', 'cnbc.com', 'bbc.com', 'bbc.co.uk', 'cnn.com',
+    'theguardian.com', 'washingtonpost.com', 'businessinsider.com', 'fortune.com',
+    'forbes.com', 'inc.com', 'fastcompany.com',
 
-    // AI/tech press (generally credible, but still screened via recency)
-    'sifted.eu', 'theinformation.com'
+    // AI/tech press (credible, active coverage)
+    'sifted.eu', 'theinformation.com', 'venturebeat.com', 'zdnet.com', 'cnet.com',
+    'engadget.com', 'thenextweb.com', 'gizmodo.com', 'tomshardware.com', 'pcmag.com',
+    'tomsguide.com', 'digitaltrends.com', 'mashable.com', '9to5google.com', '9to5mac.com',
+    'macrumors.com', 'androidcentral.com', 'androidauthority.com',
+
+    // AI-focused outlets
+    'unite.ai', 'artificialintelligence-news.com', 'aiweekly.co', 'marktechpost.com',
+    'syncedreview.com', 'analyticsindiamag.com', 'analyticsvidhya.com',
+    'decrypt.co', 'coindesk.com', 'theblock.co',  // crypto/AI crossover
+
+    // Developer/startup news
+    'hackernews.com', 'news.ycombinator.com', 'dev.to', 'infoworld.com',
+    'sdtimes.com', 'theregister.com', 'semafor.com', 'protocol.com',
+    'pitchbook.com', 'crunchbase.com'
   ]);
 
   function isDeniedHost(host) {
